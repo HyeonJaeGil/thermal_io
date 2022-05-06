@@ -5,6 +5,7 @@
 #include <sensor_msgs/Image.h>
 #include <iostream>
 #include "yaml-cpp/yaml.h"
+#include "camera_info.h"
 
 // #include <boost/bind.hpp>
 
@@ -29,8 +30,7 @@ private:
     YAML::Node config_file;
     int image_width; 
     int image_height;
-    cv::Mat camera_matrix;
-    cv::Mat dist_coeff;
+    CameraInfo cam_info;
 
     bool ReadConfigFile(YAML::Node& config_file);
 };
@@ -52,7 +52,7 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
 {
     cv_ptr = cv_bridge::toCvCopy(img_in, sensor_msgs::image_encodings::MONO16);
     cv::Mat img_undistort(image_width, image_height, CV_16UC1);
-    cv::undistort(cv_ptr->image, img_undistort, camera_matrix, dist_coeff);
+    cv::undistort(cv_ptr->image, img_undistort, cam_info.CameraMatrix(), cam_info.DistCoeff());
     int row = cv_ptr->image.rows;
     int col = cv_ptr->image.cols;
     cv::Mat new_image(row, col, CV_8UC1);
@@ -86,22 +86,14 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
 
 bool ThermalIO::ReadConfigFile(YAML::Node& config_file)
 {
-    const std::string camera_name = config_file["camera_name"].as<std::string>();
-    image_width = config_file["image_width"].as<int>();
-    image_height = config_file["image_height"].as<int>();    
+    cam_info.CameraName(config_file["camera_name"].as<std::string>());
+    cam_info.Width(config_file["image_width"].as<int>());
+    cam_info.Height(config_file["image_height"].as<int>());
+    cam_info.CameraMatrix(config_file["camera_matrix"]["data"].as<std::vector<double>>());
+    cam_info.DistCoeff(config_file["distortion_coefficients"]["data"].as<std::vector<double>>());
 
-    camera_matrix = cv::Mat
-            (config_file["camera_matrix"]["data"].as<std::vector<double>>());
-    dist_coeff = cv::Mat
-            (config_file["distortion_coefficients"]["data"].as<std::vector<double>>()).reshape(1,5);
-
-    camera_matrix = (cv::Mat_<double>(3, 3) << 529.4328871, 0.0, 311.119, 
-                                                0.0, 529.5314275019, 266.1281757546, 
-                                                0.0, 0.0, 1.0);
-    dist_coeff = (cv::Mat_<double>(1, 5) << -3.580882335e-01, 9.94318453e-02, 0, 0, 0);
-
-    std::cout << "camera matrix: \n" << camera_matrix<< std::endl;
-    std::cout << "distortion_coefficients: \n" << dist_coeff<< std::endl;
+    // std::cout << "camera matrix is :" << cam_info.CameraMatrix()<< std::endl;
+    // std::cout << "distortion coefficient is :" << cam_info.DistCoeff()<< std::endl;
     return true;
 }
 

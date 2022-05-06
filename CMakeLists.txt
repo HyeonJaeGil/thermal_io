@@ -140,7 +140,7 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/thermal_io_node.cpp)
 
-add_executable(thermal_io_node src/thermal_io_node.cpp)
+add_executable(thermal_io_node src/thermal_io_node.cpp src/camera_info.cc)
 target_link_libraries(thermal_io_node ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES} yaml-cpp)
 
 ## Rename C++ executable without prefix
