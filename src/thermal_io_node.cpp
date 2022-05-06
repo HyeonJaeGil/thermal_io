@@ -6,6 +6,9 @@
 #include <iostream>
 #include "yaml-cpp/yaml.h"
 #include "camera_info.h"
+#include "elsed_detector.h"
+#include "lsd_detector.h"
+ #include <opencv2/line_descriptor.hpp>
 
 // #include <boost/bind.hpp>
 
@@ -31,6 +34,10 @@ private:
     int image_width; 
     int image_height;
     CameraInfo cam_info;
+    // LineDetectorInterface* line_detector;
+    ElsedDetector elsed;
+    LsdDetector lsd;
+
 
     bool ReadConfigFile(YAML::Node& config_file);
 };
@@ -46,6 +53,7 @@ ThermalIO::ThermalIO()
     out_topic = "/thermal_8bit_left/image_raw";
     img_sub = nh.subscribe(in_topic, 1, &ThermalIO::img_cb, this);
     img_pub = nh.advertise<sensor_msgs::Image>(out_topic, 10);
+    // line_detector = &elsed;
 }
 
 void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
@@ -71,6 +79,11 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
     // cv::imshow("view2", equalized_image_3ch);
 
     cv::cvtColor(equalized_image, equalized_image_3ch, CV_GRAY2BGR, 3);
+
+    lsd.DetectLineFeature(equalized_image_3ch);
+    // elsed.DetectLineFeature(equalized_image_3ch);
+    cv::imshow("view2", equalized_image_3ch);
+
 
     cv_bridge::CvImage out_msg;
     out_msg.header   = img_in->header; // Same timestamp and tf frame as input image

@@ -125,6 +125,13 @@ include_directories(
   ${OpenCV_INCLUDE_DIRS}
 )
 
+include_directories(
+${PROJECT_SOURCE_DIR}
+${PROJECT_SOURCE_DIR}/include
+)
+
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/thermal_io.cpp
@@ -140,8 +147,19 @@ include_directories(
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/thermal_io_node.cpp)
 
-add_executable(thermal_io_node src/thermal_io_node.cpp src/camera_info.cc)
-target_link_libraries(thermal_io_node ${catkin_LIBRARIES} ${OpenCV_LIBS} ${Boost_LIBRARIES} yaml-cpp)
+add_executable(thermal_io_node 
+    src/thermal_io_node.cpp 
+    src/camera_info.cc 
+    src/elsed_detector.cc
+    src/lsd_detector.cc
+    )
+target_link_libraries(thermal_io_node 
+    ${catkin_LIBRARIES} 
+    ${OpenCV_LIBS} 
+    ${Boost_LIBRARIES} 
+    yaml-cpp
+    ${PROJECT_SOURCE_DIR}/Thirdparty/ELSED/lib/libelsed.a
+    )
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
