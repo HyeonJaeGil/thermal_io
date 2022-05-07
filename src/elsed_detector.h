@@ -5,6 +5,7 @@ class ElsedDetector : public LineDetectorInterface
 {
 private:
     cv::Mat orig_img;
+    cv::Mat detected_img;
     upm::ELSED elsed;
     upm::Segments segs;
     upm::ELSEDParams params;
@@ -25,6 +26,8 @@ public:
     ElsedDetector() = default;
     ElsedDetector(cv::Mat img) : orig_img(img){}
     ElsedDetector(upm::ELSEDParams param) : elsed(param){}
-    virtual void DetectLineFeature(cv::Mat& img_in) override;
+    virtual void DetectLineFeature(cv::Mat img_in) override;
+    virtual void ShowDetectedImage(char* window_title) override;
+
 
 };
