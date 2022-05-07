@@ -81,8 +81,12 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
     cv::cvtColor(equalized_image, equalized_image_3ch, CV_GRAY2BGR, 3);
 
     lsd.DetectLineFeature(equalized_image_3ch);
-    // elsed.DetectLineFeature(equalized_image_3ch);
-    cv::imshow("view2", equalized_image_3ch);
+    lsd.ShowDetectedImage("view2");
+
+    elsed.DetectLineFeature(equalized_image_3ch);
+    elsed.ShowDetectedImage("view3");
+    
+    // cv::imshow("view2", equalized_image_3ch);
 
 
     cv_bridge::CvImage out_msg;
