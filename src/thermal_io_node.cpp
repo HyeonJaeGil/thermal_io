@@ -8,8 +8,6 @@
 #include "camera_info.h"
 #include "elsed_detector.h"
 #include "lsd_detector.h"
- #include <opencv2/line_descriptor.hpp>
-
 // #include <boost/bind.hpp>
 
 
@@ -31,8 +29,6 @@ private:
     // image_transport::Publisher image_pub;
     cv_bridge::CvImagePtr cv_ptr;
     YAML::Node config_file;
-    int image_width; 
-    int image_height;
     CameraInfo cam_info;
     // LineDetectorInterface* line_detector;
     ElsedDetector elsed;
@@ -59,7 +55,8 @@ ThermalIO::ThermalIO()
 void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
 {
     cv_ptr = cv_bridge::toCvCopy(img_in, sensor_msgs::image_encodings::MONO16);
-    cv::Mat img_undistort(image_width, image_height, CV_16UC1);
+    cv::Mat img_undistort(cv_ptr->image.rows, cv_ptr->image.cols, CV_16UC1);
+    assert(!cv_ptr->image.empty());
     cv::undistort(cv_ptr->image, img_undistort, cam_info.CameraMatrix(), cam_info.DistCoeff());
     int row = cv_ptr->image.rows;
     int col = cv_ptr->image.cols;
@@ -72,12 +69,9 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
         }
     cv::Mat equalized_image(row, col, CV_8UC1);
     cv::equalizeHist(new_image, equalized_image);
-    cv::imshow("view", equalized_image);   
+    // cv::imshow("view", equalized_image);   
      
     cv::Mat equalized_image_3ch(row, col, CV_8UC3);
-    // cv::equalizeHist(new_image, equalized_image_3ch);
-    // cv::imshow("view2", equalized_image_3ch);
-
     cv::cvtColor(equalized_image, equalized_image_3ch, CV_GRAY2BGR, 3);
 
     lsd.DetectLineFeature(equalized_image_3ch);
@@ -86,9 +80,6 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
     elsed.DetectLineFeature(equalized_image_3ch);
     elsed.ShowDetectedImage("view3");
     
-    // cv::imshow("view2", equalized_image_3ch);
-
-
     cv_bridge::CvImage out_msg;
     out_msg.header   = img_in->header; // Same timestamp and tf frame as input image
     out_msg.encoding = sensor_msgs::image_encodings::MONO8; // Or whatever
