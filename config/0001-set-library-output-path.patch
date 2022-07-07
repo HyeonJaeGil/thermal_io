@@ -1,0 +1,31 @@
+From 8fc0c93bcba6babae51c425062c5764dfcb513f2 Mon Sep 17 00:00:00 2001
+From: HyeonJaeGil <now9728@gmail.com>
+Date: Fri, 8 Jul 2022 01:50:11 +0900
+Subject: [PATCH] set library output path
+
+---
+ CMakeLists.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 40949b5..356726c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -4,10 +4,13 @@ project(ELSED)
+ find_package(OpenCV REQUIRED)
+ include_directories(${OpenCV_INCLUDE_DIRS})
+ 
++set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
++
+ file(GLOB_RECURSE LIB_SOURCES "src/*.cpp" "src/*.h")
+ include_directories(src/include)
+ add_library(elsed ${LIB_SOURCES})
+ target_link_libraries(elsed ${OpenCV_LIBS})
+ 
++
+ add_executable(elsed_main src/main.cpp)
+ target_link_libraries(elsed_main elsed ${OpenCV_LIBS})
+\ No newline at end of file
+-- 
+2.17.1
+
