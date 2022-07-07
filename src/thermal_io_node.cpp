@@ -43,10 +43,10 @@ ThermalIO::ThermalIO()
 {
     // img_sub = nh.subscribe<sensor_msgs::Image>(in_topic, 100, boost::bind(img_cb, _1));
     config_file = YAML::LoadFile
-            ("/home/hj/line_ws/src/thermal_io/config/thermal_14bit_left.yaml");
+            ("/home/hj/Workspace/thermal_ws/src/thermal_io/config/thermal_14bit_left.yaml");
     ReadConfigFile(config_file);
-    in_topic = "/thermal_14bit_left/image_raw";
-    out_topic = "/thermal_8bit_left/image_raw";
+    // in_topic = "/thermal_14bit_left/image_raw";
+    // out_topic = "/thermal_8bit_left/image_raw";
     img_sub = nh.subscribe(in_topic, 1, &ThermalIO::img_cb, this);
     img_pub = nh.advertise<sensor_msgs::Image>(out_topic, 10);
     // line_detector = &elsed;
@@ -99,6 +99,9 @@ bool ThermalIO::ReadConfigFile(YAML::Node& config_file)
     cam_info.Height(config_file["image_height"].as<int>());
     cam_info.CameraMatrix(config_file["camera_matrix"]["data"].as<std::vector<double>>());
     cam_info.DistCoeff(config_file["distortion_coefficients"]["data"].as<std::vector<double>>());
+
+    in_topic = config_file["in_topic"].as<std::string>();
+    out_topic = config_file["out_topic"].as<std::string>();
 
     // std::cout << "camera matrix is :" << cam_info.CameraMatrix()<< std::endl;
     // std::cout << "distortion coefficient is :" << cam_info.DistCoeff()<< std::endl;

@@ -31,3 +31,6 @@ projection_matrix: !!opencv-matrix
    data: [ 2.5233871067517285e+02, 0., 3.0724241065979004e+02, 0., 0.,
        2.5233871067517285e+02, 2.5017333030700684e+02, 0., 0., 0., 1.,
        0. ]
+
+in_topic: /thermal_14bit_left/image_raw
+out_topic: /thermal_8bit_left/image_raw
