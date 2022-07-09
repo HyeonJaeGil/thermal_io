@@ -1,5 +1,5 @@
 #include <opencv2/opencv.hpp>
-#include "camera_info.h"
+#include "thermal_io/camera_info.h"
 
 CameraInfo::CameraInfo()
     : camera_matrix(cv::Mat(3, 3, CV_64FC1)), dist_coeff(cv::Mat(1, 5, CV_64FC1))

@@ -1,3 +1,4 @@
+#pragma once 
 #include <opencv2/opencv.hpp>
 
 class CameraInfo
@@ -8,6 +9,7 @@ private:
     int image_height;
     cv::Mat camera_matrix;
     cv::Mat dist_coeff;
+    
 public:
     CameraInfo();
     std::string CameraName() const;

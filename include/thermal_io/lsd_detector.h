@@ -1,4 +1,4 @@
-#include "line_detector_interface.h"
+#include "thermal_io/line_detector_interface.h"
 #include <opencv2/line_descriptor.hpp>
 
 class LsdDetector : public LineDetectorInterface

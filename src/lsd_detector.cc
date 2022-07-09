@@ -1,4 +1,4 @@
-#include "lsd_detector.h"
+#include "thermal_io/lsd_detector.h"
 
 LsdDetector::LsdDetector(){
     bd = cv::line_descriptor::LSDDetector::createLSDDetector();

@@ -1,0 +1,36 @@
+%YAML:1.0
+---
+image_width: 640
+image_height: 512
+camera_name: /stereo_thermal_14bit/right
+camera_matrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 4.2727720525849998e+02, 0., 3.3772391452220000e+02, 0.,
+       4.2259639991009999e+02, 2.2860120591550000e+02, 0., 0., 1. ]
+distortion_model: plumb_bob
+distortion_coefficients: !!opencv-matrix
+   rows: 1
+   cols: 5
+   dt: d
+   data: [ -4.2843872979999997e-01, 1.9476135429999999e-01, 0., 0., 0. ]
+rectification_matrix: !!opencv-matrix
+   rows: 3
+   cols: 3
+   dt: d
+   data: [ 9.9822319314421015e-01, -7.2353141530800934e-03,
+       5.9144796035518768e-02, 8.0226220787053097e-03,
+       9.9988220412196260e-01, -1.3084930843841864e-02,
+       -5.9043155437011885e-02, 1.3536177795526067e-02,
+       9.9816365275776742e-01 ]
+projection_matrix: !!opencv-matrix
+   rows: 3
+   cols: 4
+   dt: d
+   data: [ 2.5233871067517285e+02, 0., 3.0724241065979004e+02,
+       -1.5454909986052414e+02, 0., 2.5233871067517285e+02,
+       2.5017333030700684e+02, 0., 0., 0., 1., 0. ]
+
+in_topic: /thermal_14bit/right/image_raw
+out_topic: /thermal_8bit/right/image_raw

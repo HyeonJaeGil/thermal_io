@@ -1,4 +1,4 @@
-#include "elsed_detector.h"
+#include "thermal_io/elsed_detector.h"
 
 
 void ElsedDetector::DetectLineFeature(cv::Mat img_in)

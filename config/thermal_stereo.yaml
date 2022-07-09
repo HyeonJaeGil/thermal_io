@@ -1,0 +1,43 @@
+File.version: "1.0"
+
+Camera.type: "PinHole"
+
+# Camera calibration and distortion parameters (OpenCV) 
+Camera1.fx: 4.2943288714549999e+02
+Camera1.fy: 4.2953142750190000e+02
+Camera1.cx: 3.1111923634459998e+02
+Camera1.cy: 2.6612817575460002e+02
+
+Camera1.k1: -3.5808823350000002e-01
+Camera1.k2: 9.9431845300000002e-02
+Camera1.p1: 0.0
+Camera1.p2: 0.0
+
+Camera2.fx: 4.2727720525849998e+02
+Camera2.fy: 4.2259639991009999e+02
+Camera2.cx: 3.3772391452220000e+02
+Camera2.cy: 2.2860120591550000e+02
+
+Camera2.k1: -4.2843872979999997e-01
+Camera2.k2: 1.9476135429999999e-01
+Camera2.p1: 0.0
+Camera2.p2: 0.0
+
+Camera.width: 640
+Camera.height: 512
+
+# Camera frames per second 
+Camera.fps: 10
+
+# Color order of the images (0: BGR, 1: RGB. It is ignored if images are grayscale)
+Camera.RGB: 1
+
+Stereo.ThDepth: 30.0
+Stereo.T_c1_c2: !!opencv-matrix
+  rows: 4
+  cols: 4
+  dt: f
+  data:   [ 0.9985,   -0.0013,    0.0551,    0.6106,
+            0.0027,    0.9997,   -0.0266,   -0.0029,
+           -0.0551,    0.0268,    0.9982,   -0.0303,
+                 0,         0,         0,    1.0000]

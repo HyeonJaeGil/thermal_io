@@ -6,8 +6,8 @@
 #include <iostream>
 #include "yaml-cpp/yaml.h"
 #include "camera_info.h"
-#include "elsed_detector.h"
-#include "lsd_detector.h"
+#include "thermal_io/elsed_detector.h"
+#include "thermal_io/lsd_detector.h"
 // #include <boost/bind.hpp>
 
 
@@ -17,6 +17,7 @@ public:
     ThermalIO();
     ThermalIO(std::string config_file);
     void img_cb(sensor_msgs::ImageConstPtr img_in);
+    cv::Mat thermal14bit28bit(const cv::Mat img1);
 
 private:
     ros::NodeHandle nh;
@@ -90,6 +91,81 @@ void ThermalIO::img_cb(sensor_msgs::ImageConstPtr img_in)
     // img_pub.publish(msg);
 
     return;
+}
+
+
+cv::Mat ThermalIO::thermal14bit28bit(const cv::Mat img1)
+{
+    const float PB = 1428, PF = 1.0, PO = 118.126, PR = 377312.0; 
+    float min_T0, max_T0, min_T1, max_T1, min_T2, max_T2;
+	cv::Mat temp = img1.clone();
+    cv::Size imageSize= img1.size(); 
+    cv::Mat map1, map2;
+	initUndistortRectifyMap(cam_info.CameraMatrix(), cam_info.DistCoeff(), cv::Mat(), 
+                            cam_info.CameraMatrix(), imageSize, CV_32FC1, map1, map2);
+	remap(img1, temp, map1, map2, cv::INTER_LINEAR);
+	// cv::undistort(img1, img1, camera_info.cvK, camera_info.cvD);
+	cv::Mat undist1, hist_img;
+	cv::Mat temimg = cv::Mat::zeros(imageSize, CV_8UC(100));
+	auto lowVal0=PR/(exp(PB/(273.15+min_T0))-PF)+PO;
+	auto highVal0=PR/(exp(PB/(273.15+max_T0))-PF)+PO;
+	auto countRange0 = highVal0 - lowVal0;
+	auto lowVal1=PR/(exp(PB/(273.15+min_T1))-PF)+PO;
+	auto highVal1=PR/(exp(PB/(273.15+max_T1))-PF)+PO;
+	auto countRange1 = highVal1 - lowVal1; 
+	auto lowVal2=PR/(exp(PB/(273.15+min_T2))-PF)+PO;
+	auto highVal2=PR/(exp(PB/(273.15+max_T2))-PF)+PO;
+	auto countRange2 = highVal2 - lowVal2;  
+	const double PI = 3.1415926;
+	// char buffer[256];
+	// char now[256];
+	// sprintf(buffer, "%06d", n);
+	
+
+	// std::string save_imgfilename1 = "/home/jyk/aa/thermal_image/"+ folder + "/left/" + buffer + ".yml";
+	// cv::FileStorage fs1(save_imgfilename1, cv::FileStorage::WRITE);
+
+	#pragma omp parallel
+	for(int channel =0; channel < 100; ++channel)
+	{
+		auto lowVal = PR/(exp(PB/(273.15+10))-PF)+PO;
+		auto highVal = PR/(exp(PB/(273.15+14+0.3*channel))-PF)+PO;
+		auto countRange = highVal - lowVal;  
+		for (int count1 = 0; count1 < 640; ++count1)
+		{
+			for (int count2 = 0; count2 < 512; ++count2)
+			{
+				int tmpData1 = temp.at<uint16_t>(count2,count1);
+				int n0=floor(((tmpData1- lowVal)*256.0 / countRange));
+				if(n0>=0)
+				{	
+					if(floor(128 * (sin( (((tmpData1- lowVal)/countRange)-1) * PI / 2) )+128)<256)
+					{
+						// temimg.at<Vec100b>(count2,count1)[channel]=floor(128(sin((((tmpData1- lowVal) / countRange)-1)PI/2))+128);
+
+					}
+					else
+					{
+						// temimg.at<Vec100b>(count2,count1)[channel]=255;
+					}
+				}
+			}
+		}
+		// sprintf(now, "%d", channel);
+		// fs1 << "matrix" << temimg;
+		// fs1.write("matrix",thermal8bitimg1);
+		
+	}
+	// fs1.release();
+	// if(do_flip==1)
+	// {
+	// 	cv::flip(temimg, temimg, -1);
+	// }
+	
+	// equalizeHist(undist1, hist_img);
+	undist1 = temimg;
+
+	return undist1;
 }
 
 bool ThermalIO::ReadConfigFile(YAML::Node& config_file)

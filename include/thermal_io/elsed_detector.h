@@ -1,5 +1,5 @@
 #include "line_detector_interface.h"
-#include "Thirdparty/ELSED/src/ELSED.h"
+#include "thirdparty/ELSED/src/ELSED.h"
 
 class ElsedDetector : public LineDetectorInterface
 {
