@@ -1,3 +1,4 @@
 [submodule "thirdparty/ELSED"]
 	path = thirdparty/ELSED
 	url = https://github.com/iago-suarez/ELSED.git
+	ignore = all
