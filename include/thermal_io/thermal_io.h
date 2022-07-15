@@ -28,6 +28,8 @@ protected:
     cv_bridge::CvImagePtr cv_ptr;
     YAML::Node config_file;
     CameraInfo cam_info;
+    int max_value, min_value;
+    int crop_height;
 
 protected:
     bool ReadConfigFile(YAML::Node& config_file);

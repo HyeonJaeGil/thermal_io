@@ -25,6 +25,10 @@ bool ThermalIO::ReadConfigFile(YAML::Node& config_file)
     in_topic = config_file["in_topic"].as<std::string>();
     out_topic = config_file["out_topic"].as<std::string>();
 
+    max_value = config_file["max_value"].as<int>();
+    min_value = config_file["min_value"].as<int>();
+    crop_height = config_file["crop_height"].as<int>();
+
     // std::cout << "camera matrix is :" << cam_info.CameraMatrix()<< std::endl;
     // std::cout << "distortion coefficient is :" << cam_info.DistCoeff()<< std::endl;
     return true;
