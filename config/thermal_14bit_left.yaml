@@ -34,3 +34,6 @@ projection_matrix: !!opencv-matrix
 
 in_topic: /thermal_14bit/left/image_raw
 out_topic: /thermal_8bit/left/image_raw
+max_value: 4600
+min_value: 2000
+crop_height: 400
