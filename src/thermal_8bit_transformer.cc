@@ -112,8 +112,11 @@ void Thermal8bitTransformer::img_cb(sensor_msgs::ImageConstPtr img_in)
     if(sine_remapping)
     {
         new_image = thermal14bit28bit(cv_ptr->image);
-        cv::imshow("view", new_image);   
-        cv::waitKey(1);
+        if(visualize)
+        {
+            cv::imshow("view", new_image);   
+            cv::waitKey(1);
+        }
     }
     else {
         for(int i = 0; i < crop_height; ++i)
@@ -135,8 +138,13 @@ void Thermal8bitTransformer::img_cb(sensor_msgs::ImageConstPtr img_in)
                 new_image_cropped.at<uint8_t>(i,j) = 255*(old_image_cropped.at<uint16_t>(i,j) - min_value) / (max_value - min_value);
             }
         }
-        cv::imshow(out_topic, new_image_cropped);
-        cv::waitKey(1);
+
+        if(visualize)
+        {
+            cv::imshow(out_topic, new_image_cropped);
+            cv::waitKey(1);
+        }
+
     }
     
 

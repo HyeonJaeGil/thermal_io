@@ -37,3 +37,4 @@ out_topic: /thermal_8bit/left/image_raw
 max_value: 4600
 min_value: 2000
 crop_height: 400
+visualize: 1

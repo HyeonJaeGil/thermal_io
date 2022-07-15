@@ -30,6 +30,7 @@ protected:
     CameraInfo cam_info;
     int max_value, min_value;
     int crop_height;
+    bool visualize;
 
 protected:
     bool ReadConfigFile(YAML::Node& config_file);
